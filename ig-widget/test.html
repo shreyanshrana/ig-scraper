@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IG Widget</title>
+    <script src="./embed.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script>
+        $.getJSON('./postURLs.json',(data)=>{
+            const postURLs = data.postURLs;
+            // console.log(postURLs);
+            token = ""; //add token from oEmbed in developer.facebook.com
+
+            postURLs.forEach(element => {
+                console.log(element);
+                const a = async() =>{
+                urltoken = "https://graph.facebook.com/v10.0/instagram_oembed?url=" + 
+                            element + "&access_token=" +  
+                            token;
+                let res;
+                await $.ajax(
+                    {
+                        url:urltoken,  
+                        success: function (response) {
+                            res=response;
+                        },
+                        error: function () {
+                            console.log("couldn't process the instagram url");
+                    }}
+                    );
+                const html = res.html;
+                document.getElementById("post").innerHTML += html;
+                instgrm.Embeds.process();
+            }
+        a();
+        });
+        })
+    </script>
+</head>
+<body>
+    <div id="post"></div>
+</body>
+</html>
